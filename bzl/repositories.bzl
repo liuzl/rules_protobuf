@@ -54,7 +54,8 @@ REPOSITORIES = {
     "boringssl": {
         "kind": "git_repository",
         "name":  "boringssl", # use short version as this is what boringssl defines workspace as
-        "remote":  "https://boringssl.googlesource.com/boringssl",
+#"remote":  "https://boringssl.googlesource.com/boringssl",
+        "remote":  'https://github.com/google/boringssl.git',
         "commit": "36b3ab3e5d3a4892444a698f7989f2150824d804", # Aug 3 2016
     },
 
