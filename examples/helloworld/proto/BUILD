@@ -1,21 +1,55 @@
 package(default_visibility = ["//visibility:public"])
 
-load("//protobuf:rules.bzl", "proto_compile")
 load("//cpp:rules.bzl", "cc_proto_library")
+load("//csharp:rules.bzl", "csharp_proto_library")
 load("//go:rules.bzl", "go_proto_library")
 load("//gogo:rules.bzl", "gogo_proto_library")
 load("//java:rules.bzl", "java_proto_library")
-load("//csharp:rules.bzl", "csharp_proto_library")
+load("//node:rules.bzl", "node_proto_library")
+load("//objc:rules.bzl", "objc_proto_compile")
+load("//protobuf:rules.bzl", "proto_compile")
+load("//python:rules.bzl", "py_proto_compile")
+load("//ruby:rules.bzl", "ruby_proto_compile")
 
 filegroup(
     name = "protos",
     srcs = ["helloworld.proto"],
 )
 
+cc_proto_library(
+    name = "cpp",
+    proto_deps = [
+        "//examples/proto:cpp",
+    ],
+    protos = [":protos"],
+    verbose = 0,
+    with_grpc = True,
+)
+
+csharp_proto_library(
+    name = "Helloworld",
+    proto_deps = [
+        "//examples/proto:csharp",
+    ],
+    protos = [":protos"],
+    verbose = 0,
+    with_grpc = True,
+)
+
 go_proto_library(
     name = "go",
     proto_deps = [
         "//examples/proto:go_default_library",
+    ],
+    protos = [":protos"],
+    verbose = 0,
+    with_grpc = True,
+)
+
+java_proto_library(
+    name = "java",
+    proto_deps = [
+        "//examples/proto:java",
     ],
     protos = [":protos"],
     verbose = 0,
@@ -34,49 +68,39 @@ go_proto_library(
 #     with_grpc = True,
 # )
 
-cc_proto_library(
-    name = "cpp",
+node_proto_library(
+    name = "node",
     proto_deps = [
-        "//examples/proto:cpp",
+        "//examples/proto:node",
     ],
     protos = [":protos"],
     verbose = 0,
     with_grpc = True,
 )
 
-java_proto_library(
-    name = "java",
-    output_to_workspace = False,
-    proto_deps = [
-        "//examples/proto:java",
-    ],
+objc_proto_compile(
+    name = "objc",
     protos = [":protos"],
     with_grpc = True,
-    verbose = 0,
+    deps = [
+        "//examples/proto:objc",
+    ],
 )
 
-proto_compile(
+py_proto_compile(
     name = "py",
-    langs = ["//python"],
-    output_to_workspace = False,
     protos = [":protos"],
-    with_grpc = False,
-)
-
-proto_compile(
-    name = "ruby",
-    langs = ["//ruby"],
-    output_to_workspace = False,
-    protos = [":protos"],
-    with_grpc = False,
-)
-
-csharp_proto_library(
-    name = "Helloworld",
-    proto_deps = [
-        "//examples/proto:csharp",
-    ],
-    protos = [":protos"],
-    verbose = 0,
     with_grpc = True,
+    deps = [
+        "//examples/proto:py",
+    ],
+)
+
+ruby_proto_compile(
+    name = "ruby",
+    protos = [":protos"],
+    with_grpc = True,
+    deps = [
+        "//examples/proto:ruby",
+    ],
 )

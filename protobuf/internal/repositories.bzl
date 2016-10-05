@@ -30,8 +30,8 @@ REPOSITORIES = {
         "kind": "git_repository",
         "name": "com_github_google_protobuf",
         "remote": "https://github.com/google/protobuf.git",
+        "commit": "52ab3b07ac9a6889ed0ac9bf21afd8dab8ef0014", # Oct 4, 2016
         #"tag": "v3.0.0",
-        "commit": "ff2a6600e5df21683b86aca7e30bbb80c0aed848",
     },
 
     # This binds the cc_binary "protoc" into //external:protoc.  This
@@ -64,7 +64,8 @@ REPOSITORIES = {
         "name": "com_github_grpc_grpc",
         "remote": "https://github.com/grpc/grpc.git",
         "init_submodules": True,
-        "tag": "v0.15.2",
+        "commit": "673fa6c88b8abd542ae50c4480de92880a1e4777",
+        #"tag": "v0.15.2",
     },
 
     # libssl is required for c++ grpc where it is expected in
@@ -103,7 +104,7 @@ REPOSITORIES = {
         "kind": "git_repository",
         "name": "com_github_nanopb_nanopb",
         "remote": "https://github.com/nanopb/nanopb.git",
-        "commit": "0198210f2cc349e7bc5199e8db7f4afc8208d843", # Aug 2 2016
+        "commit": "91bb64a47b36b112c9b22391ef76fab29cf2cffc", # Sep 1 2016
     },
 
     # grpc++ expects //external:nanopb
@@ -113,8 +114,10 @@ REPOSITORIES = {
         "actual": "@com_github_nanopb_nanopb//:nanopb",
     },
 
-    # Bind the executable cc_binary grpc plugin into //external:protoc_gen_grpc_cpp.  Expects
-    # //external:protobuf_compiler.
+    # Bind the executable cc_binary grpc plugin into
+    # //external:protoc_gen_grpc_cpp.  Expects
+    # //external:protobuf_compiler. TODO: is it really necessary to
+    # bind it in external?
     "external_protoc_gen_grpc_cpp": {
         "kind": "bind",
         "name": "protoc_gen_grpc_cpp",
@@ -195,23 +198,44 @@ REPOSITORIES = {
         "build_file": str(Label("//protobuf:build_file/com_github_grpc_ecosystem_grpc_gateway.BUILD")),
     },
 
+
+    # ****************************************************************
+    # PYTHON
+    # ****************************************************************
+
+    "external_protoc_gen_grpc_python": {
+        "kind": "bind",
+        "name": "protoc_gen_grpc_python",
+        "actual": "@com_github_grpc_grpc//:grpc_python_plugin",
+    },
+
+    # ****************************************************************
+    # RUBY
+    # ****************************************************************
+
+    "external_protoc_gen_grpc_ruby": {
+        "kind": "bind",
+        "name": "protoc_gen_grpc_ruby",
+        "actual": "@com_github_grpc_grpc//:grpc_ruby_plugin",
+    },
+
+    # ****************************************************************
+    # OBJC
+    # ****************************************************************
+
+    "external_protoc_gen_grpc_objc": {
+        "kind": "bind",
+        "name": "protoc_gen_grpc_objc",
+        "actual": "@com_github_grpc_grpc//:grpc_objective_c_plugin",
+    },
+
     # ****************************************************************
     # JAVA
     # ****************************************************************
 
-    "com_google_auth_google_auth_library_credentials": {
-        "kind": "maven_jar",
-        "name": "com_google_auth_google_auth_library_credentials",
-        "artifact": "com.google.auth:google-auth-library-credentials:jar:0.4.0",
-        "sha1": "171da91494a1391aef13b88bd7302b29edb8d3b3",
-    },
-
-    "com_google_code_gson_gson": {
-        "kind": "maven_jar",
-        "name": "com_google_code_gson_gson",
-        "artifact": "com.google.code.gson:gson:jar:2.3",
-        "sha1": "5fc52c41ef0239d1093a1eb7c3697036183677ce",
-    },
+    # ######################
+    # Compile Dependencies #
+    # ######################
 
     "com_google_code_findbugs_jsr305": {
         "kind": "maven_jar",
@@ -227,18 +251,25 @@ REPOSITORIES = {
         "sha1": "6ce200f6b23222af3d8abb6b6459e6c44f4bb0e9",
     },
 
+    "io_grpc_grpc_core": {
+        "kind": "maven_jar",
+        "name": "io_grpc_grpc_core",
+        "artifact": "io.grpc:grpc-core:jar:1.0.1",
+        "sha1": "dce1c939c2c6110ac571d99f8d2a29b19bdad4db",
+    },
+
+    "io_grpc_grpc_protobuf": {
+        "kind": "maven_jar",
+        "name": "io_grpc_grpc_protobuf",
+        "artifact": "io.grpc:grpc-protobuf:jar:1.0.1",
+        "sha1": "17222b03c64a65eb05de5ab266c920fca8c90fab",
+    },
+
     "com_google_protobuf_protobuf_java": {
         "kind": "maven_jar",
         "name": "com_google_protobuf_protobuf_java",
         "artifact": "com.google.protobuf:protobuf-java:jar:3.0.0",
         "sha1": "6d325aa7c921661d84577c0a93d82da4df9fa4c8",
-    },
-
-    "com_google_protobuf_nano_protobuf_javanano": {
-        "kind": "maven_jar",
-        "name": "com_google_protobuf_nano_protobuf_javanano",
-        "artifact": "com.google.protobuf.nano:protobuf-javanano:jar:3.0.0-alpha-5",
-        "sha1": "357e60f95cebb87c72151e49ba1f570d899734f8",
     },
 
     "com_google_protobuf_protobuf_java_util": {
@@ -248,74 +279,50 @@ REPOSITORIES = {
         "sha1": "5c39485775c197fc1938e594dc358bfec1c188a0",
     },
 
-    "com_squareup_okhttp_okhttp": {
-        "kind": "maven_jar",
-        "name": "com_squareup_okhttp_okhttp",
-        "artifact": "com.squareup.okhttp:okhttp:jar:2.5.0",
-        "sha1": "4de2b4ed3445c37ec1720a7d214712e845a24636",
-    },
-
-    "com_squareup_okio_okio": {
-        "kind": "maven_jar",
-        "name": "com_squareup_okio_okio",
-        "artifact": "com.squareup.okio:okio:jar:1.6.0",
-        "sha1": "98476622f10715998eacf9240d6b479f12c66143",
-    },
-
-    "io_grpc_grpc_auth": {
-        "kind": "maven_jar",
-        "name": "io_grpc_grpc_auth",
-        "artifact": "io.grpc:grpc-auth:jar:1.0.0-pre1",
-        "sha1": "f0f297a406c45ecc030e2aca69b81a7ed67c3de7",
-    },
-
-    "io_grpc_grpc_core": {
-        "kind": "maven_jar",
-        "name": "io_grpc_grpc_core",
-        "artifact": "io.grpc:grpc-core:jar:1.0.0-pre1",
-        "sha1": "6489670c182cb214cdcbbd7e6508b4f3ac831ce5",
-    },
-
-    "io_grpc_grpc_netty": {
-        "kind": "maven_jar",
-        "name": "io_grpc_grpc_netty",
-        "artifact": "io.grpc:grpc-netty:jar:1.0.0-pre1",
-        "sha1": "53094773926bf863daa8faa3ff1175f3f6909ca8",
-    },
-
-    "io_grpc_grpc_okhttp": {
-        "kind": "maven_jar",
-        "name": "io_grpc_grpc_okhttp",
-        "artifact": "io.grpc:grpc-okhttp:jar:1.0.0-pre1",
-        "sha1": "3cd4e41931268eef7c1ce00a2baecba6e53cb1da",
-    },
-
-    "io_grpc_grpc_protobuf": {
-        "kind": "maven_jar",
-        "name": "io_grpc_grpc_protobuf",
-        "artifact": "io.grpc:grpc-protobuf:jar:1.0.0-pre1",
-        "sha1": "9e5235fbae40a22fe97a4cd55333b18969ef76cb",
-    },
-
     "io_grpc_grpc_protobuf_lite": {
         "kind": "maven_jar",
         "name": "io_grpc_grpc_protobuf_lite",
-        "artifact": "io.grpc:grpc-protobuf-lite:jar:1.0.0-pre1",
-        "sha1": "8ab07e256e0d9fb3650954f38bc09b5ea258b716",
+        "artifact": "io.grpc:grpc-protobuf-lite:jar:1.0.1",
+        "sha1": "b28a07b56ed2e66088221cbaf1228fa4e9669166",
     },
 
-    "io_grpc_grpc_protobuf_nano": {
+    "com_google_code_gson_gson": {
         "kind": "maven_jar",
-        "name": "io_grpc_grpc_protobuf_nano",
-        "artifact": "io.grpc:grpc-protobuf-nano:jar:1.0.0-pre1",
-        "sha1": "c88ce3b66d21eadcdfecb8326ecd976b2aecbe9f",
+        "name": "com_google_code_gson_gson",
+        "artifact": "com.google.code.gson:gson:jar:2.3",
+        "sha1": "5fc52c41ef0239d1093a1eb7c3697036183677ce",
     },
 
     "io_grpc_grpc_stub": {
         "kind": "maven_jar",
         "name": "io_grpc_grpc_stub",
-        "artifact": "io.grpc:grpc-stub:jar:1.0.0-pre1",
-        "sha1": "1fb325fdb52b0e5df3aea3a98b0f75119b2a3701",
+        "artifact": "io.grpc:grpc-stub:jar:1.0.1",
+        "sha1": "a875969bf700b0d25dc8b7febe42bfb253ca5b3b",
+    },
+
+    "junit_junit_4": {
+        "kind": "maven_jar",
+        "name": "junit_junit_4",
+        "artifact": "junit:junit:jar:4.12",
+        "sha1": "2973d150c0dc1fefe998f834810d68f278ea58ec",
+    },
+
+    # ######################
+    # Runtime Dependencies #
+    # ######################
+
+    "io_grpc_grpc_context": {
+        "kind": "maven_jar",
+        "name": "io_grpc_grpc_context",
+        "artifact": "io.grpc:grpc-context:jar:1.0.1",
+        "sha1": "9d308f2b616044ddd380866b4e6c23b5b4020963",
+    },
+
+    "io_grpc_grpc_netty": {
+        "kind": "maven_jar",
+        "name": "io_grpc_grpc_netty",
+        "artifact": "io.grpc:grpc-netty:jar:1.0.1",
+        "sha1": "1e4628b96434fcd6fbe519e7a3dbcc1ec5ac2c14",
     },
 
     "io_netty_netty_buffer": {
@@ -374,25 +381,84 @@ REPOSITORIES = {
         "sha1": "2f17fe8c5c3b3f90908ed2d0649631a11beb3904",
     },
 
+    # ###################
+    # Nano Dependencies #
+    # ###################
+    # Todo: drop these in favor of lite?
+
+    "com_google_protobuf_nano_protobuf_javanano": {
+        "kind": "maven_jar",
+        "name": "com_google_protobuf_nano_protobuf_javanano",
+        "artifact": "com.google.protobuf.nano:protobuf-javanano:jar:3.0.0-alpha-5",
+        "sha1": "357e60f95cebb87c72151e49ba1f570d899734f8",
+    },
+
+    "io_grpc_grpc_protobuf_nano": {
+        "kind": "maven_jar",
+        "name": "io_grpc_grpc_protobuf_nano",
+        "artifact": "io.grpc:grpc-protobuf-nano:jar:1.0.1",
+        "sha1": "c88ce3b66d21eadcdfecb8326ecd976b2aecbe9f",
+    },
+
+    # ###################
+    # Auth Dependencies #
+    # ###################
+
+    "com_google_auth_google_auth_library_credentials": {
+        "kind": "maven_jar",
+        "name": "com_google_auth_google_auth_library_credentials",
+        "artifact": "com.google.auth:google-auth-library-credentials:jar:0.4.0",
+        "sha1": "171da91494a1391aef13b88bd7302b29edb8d3b3",
+    },
+
+    "io_grpc_grpc_auth": {
+        "kind": "maven_jar",
+        "name": "io_grpc_grpc_auth",
+        "artifact": "io.grpc:grpc-auth:jar:1.0.1",
+        "sha1": "5e1d053277e113ed7b7c71b5c1cbc32a8b4d3a83",
+    },
+
+    # ######################
+    # Auth?  Dependencies #
+    # ######################
+
+    "io_grpc_grpc_okhttp": {
+        "kind": "maven_jar",
+        "name": "io_grpc_grpc_okhttp",
+        "artifact": "io.grpc:grpc-okhttp:jar:1.0.1",
+        "sha1": "3cd4e41931268eef7c1ce00a2baecba6e53cb1da",
+    },
+
+    "com_squareup_okhttp_okhttp": {
+        "kind": "maven_jar",
+        "name": "com_squareup_okhttp_okhttp",
+        "artifact": "com.squareup.okhttp:okhttp:jar:2.5.0",
+        "sha1": "4de2b4ed3445c37ec1720a7d214712e845a24636",
+    },
+
+    "com_squareup_okio_okio": {
+        "kind": "maven_jar",
+        "name": "com_squareup_okio_okio",
+        "artifact": "com.squareup.okio:okio:jar:1.6.0",
+        "sha1": "98476622f10715998eacf9240d6b479f12c66143",
+    },
+
+    # ##################################
+    # Precompiled Plugins Dependencies #
+    # ##################################
+
     "protoc_gen_grpc_java_linux_x86_64": {
         "kind": "http_file",
         "name": "protoc_gen_grpc_java_linux_x86_64",
-        "url": "http://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/1.0.0-pre1/protoc-gen-grpc-java-1.0.0-pre1-linux-x86_64.exe",
-        "sha256": "4245b79757ce78a64dbec6f7facf64e1ff74fee411ce5b090c1114e1b5ec46d7",
+        "url": "http://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/1.0.1/protoc-gen-grpc-java-1.0.1-linux-x86_64.exe",
+        "sha256": "00497e9da3b8a068470bdf39b43f25084d9662e1419b01c2b3d9c29292fe0303",
     },
 
     "protoc_gen_grpc_java_macosx": {
         "kind": "http_file",
         "name": "protoc_gen_grpc_java_macosx",
-        "url": "http://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/1.0.0-pre1/protoc-gen-grpc-java-1.0.0-pre1-osx-x86_64.exe",
-        "sha256": "850fd0420cb896dfcd1f7d1edd6b3cb010890f8732f84821af5ef6b5f89e885d",
-    },
-
-    "junit_junit_4": {
-        "kind": "maven_jar",
-        "name": "junit_junit_4",
-        "artifact": "junit:junit:jar:4.12",
-        "sha1": "2973d150c0dc1fefe998f834810d68f278ea58ec",
+        "url": "http://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/1.0.1/protoc-gen-grpc-java-1.0.1-osx-x86_64.exe",
+        "sha256": "cb4762ee4bde80fee5a35409474d6f177a2005e76d41590066e09be180af7781",
     },
 
     ###:end
