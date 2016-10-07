@@ -1,24 +1,22 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library", "new_go_repository")
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
 load("//protobuf:rules.bzl", "proto_compile", "proto_repositories")
+load("//go:rules.bzl", "go_proto_repositories")
+load("//go:deps.bzl", GO_DEPS = "DEPS")
+load("//gogo:deps.bzl", GOGO_DEPS = "DEPS")
 
 def gogo_proto_repositories(
+    lang_deps = GO_DEPS + GOGO_DEPS,
     lang_requires = [
-      "protobuf",
-      "external_protoc",
       "com_github_golang_protobuf",
       "com_github_golang_glog",
       "org_golang_google_grpc",
       "org_golang_x_net",
-      "org_golang_x_net",
+      "com_github_gogo_protobuf",
     ], **kwargs):
-  proto_repositories(lang_requires = lang_requires, **kwargs)
 
-  new_go_repository(
-    name = "com_github_gogo_protobuf",
-    importpath = "github.com/gogo/protobuf",
-    commit = "a11c89fbb0ad4acfa8abc4a4d5f7e27c477169b1",
-  )
-
+  go_proto_repositories(lang_deps = lang_deps,
+                        lang_requires = lang_requires,
+                        **kwargs)
 
 PB_COMPILE_DEPS = [
   "@com_github_gogo_protobuf//proto:go_default_library",
@@ -27,7 +25,7 @@ PB_COMPILE_DEPS = [
 GRPC_COMPILE_DEPS = PB_COMPILE_DEPS + [
   "@com_github_golang_glog//:go_default_library",
   "@org_golang_google_grpc//:go_default_library",
-  "@org_golang_x_net//:context",
+  "@org_golang_x_net//context:go_default_library",
 ]
 
 
@@ -37,6 +35,7 @@ def gogo_proto_compile(langs = [str(Label("//gogo"))], **kwargs):
 def gogo_proto_library(
     name,
     langs = [str(Label("//gogo"))],
+    prefix = Label("//:go_prefix", relative_to_caller_repository=True),
     protos = [],
     imports = [],
     inputs = [],
@@ -68,6 +67,7 @@ def gogo_proto_library(
     "name": name + ".pb",
     "protos": protos,
     "deps": [dep + ".pb" for dep in proto_deps],
+    "prefix": prefix,
     "langs": langs,
     "imports": imports,
     "inputs": inputs,
