@@ -13,7 +13,8 @@ DEPS = {
     # newest-ish commit-id off that branch.
     "boringssl": {
         "rule": "git_repository",
-        "remote":  "https://boringssl.googlesource.com/boringssl",
+        #"remote":  "https://boringssl.googlesource.com/boringssl",
+        "remote":  "https://github.com/google/boringssl",
         "commit": "36b3ab3e5d3a4892444a698f7989f2150824d804", # Aug 3 2016
     },
 
